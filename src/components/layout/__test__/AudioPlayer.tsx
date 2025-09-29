@@ -5,14 +5,23 @@ type AudioPlayerProps = {
   src: string;
   onPly:(state:boolean)=>void;
   vol:number;
+  length:(len:number|void)=>void;
 };
 
-const AudioPlayer = ({ src,vol,onPly }: AudioPlayerProps) => {
+const AudioPlayer = ({ src,vol,onPly,length }: AudioPlayerProps) => {
   const audioRef: RefObject<HTMLAudioElement> = useRef(null);
+  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const [duration, setDuration] = useState<number | null>(null);
+  const [progress, setProgress] = useState(0);
 
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) {
+      length(audioRef.current.duration); // duration in seconds
+    }
+  };
+  useEffect(()=>audioRef.current?.pause(),[])
   const [isPlaying, setIsPlaying] = useState(false);
   useEffect(() => {
-    setIsPlaying(true);
     if (audioRef.current) {
       audioRef.current.play();
     }
@@ -31,8 +40,7 @@ const AudioPlayer = ({ src,vol,onPly }: AudioPlayerProps) => {
 
   return (
     <div >
-      <audio ref={audioRef} src={src}></audio>
-
+      <audio ref={audioRef} onLoadedMetadata={handleLoadedMetadata} src={src}></audio>
       {/* Play/Pause Button */}
       <button
         onClick={togglePlayPause}

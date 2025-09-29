@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from './Sidebar';
 import Player from './Player';
-
+import { MusicList } from '../../lib/musicData'
 // The layout takes the main page content as a 'children' prop
 type AppLayoutProps = {
   children: React.ReactNode;

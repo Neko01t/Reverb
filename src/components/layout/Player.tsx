@@ -1,20 +1,24 @@
 import React,{ useState,useEffect } from 'react';
 import AudioPlayer from './__test__/AudioPlayer.tsx'
-
+import { MusicList } from '../../lib/musicData.ts'
 import { Heart, Play, Mic,Volume2, Captions,Shuffle,Repeat2,StepForward,StepBack } from 'lucide-react'
+
 const Player = () => {
   const [volume, setVolume] = useState(100);
   const [seconds,setSeconds] = useState(0);
-  const [isPlaying,setIsPlaying] = useState(true);
+  const [duration, setDuration] = useState<number | null>(175);
+  const [isPlaying,setIsPlaying] = useState(false);
+  const percentage = (seconds / duration) * 100;
+  const progressBarWidth = {
+    width: `${percentage}%`,
+  };
+  useEffect(()=>{
+  if (percentage <= 100){
+      setSeconds(0)
+      setIsPlaying(false)
+  }
+  },[seconds])
   let min = 0;
-  function showTime(seconds:number) {
-    if (seconds >=60) {
-      return min = min+1;
-    }
-  }
-  if (seconds == 100 ) {
-    setSeconds(0)
-  }
   useEffect(() => {
     let intervalId: number | undefined = undefined;
 
@@ -23,8 +27,7 @@ const Player = () => {
         setSeconds(prevSeconds => prevSeconds + 1);
       }, 1000);
     }
-    console.log(isPlaying);
-
+    console.log(MusicList);
     return () => {
       clearInterval(intervalId)
     }
@@ -40,7 +43,7 @@ const Player = () => {
           <p className="text-white font-semibold">Song Title</p>
           <p className="text-neutral-400 text-sm">Artist Name</p>
         </div>
-        <button><Heart/></button>
+        <button> <Heart /></button>
       </div>
 
       {/* 2. Player Controls & Progress (Center) */}
@@ -50,18 +53,18 @@ const Player = () => {
           <button className="text-neutral-400 hover:text-white"><Shuffle/></button>
           <button className="text-neutral-400 hover:text-white"><StepBack/></button>
           <button className="bg-gray-600 p-2 hover:bg-gray-300 hover:text-gray-700 text-white rounded-full h-8 w-8 flex items-center justify-center">
-            <AudioPlayer src={song1} onPly={setIsPlaying} vol={volume} />
+            <AudioPlayer src={song1} length={setDuration } onPly={setIsPlaying} vol={volume} />
           </button>
           <button className="text-neutral-400 hover:text-white"><StepForward/></button>
           <button className="text-neutral-400 hover:text-white"><Repeat2/></button>
         </div>
         {/* Bottom: Progress Bar */}
         <div className="w-full flex items-center space-x-2 mt-2">
-          <span className="text-xs text-neutral-400">{seconds>600?"":0}{min}:{seconds<10?0:""}{seconds}</span>
+          <span className="text-xs text-neutral-400">{Math.floor(seconds / 60)}:{Math.floor(seconds % 60).toString().padStart(2, "0")}</span>
           <div className="w-full h-1 bg-neutral-600 rounded-full">
-            <div className="h-1 bg-white rounded-full" style={{ width: `${seconds}%` }}></div>
+            <div className="h-1 bg-white rounded-full" style={{ ...progressBarWidth }}></div>
           </div>
-          <span className="text-xs text-neutral-400">3:30</span>
+          <span className="text-xs text-neutral-400">{Math.floor(duration / 60)}:{Math.floor(duration % 60).toString().padStart(2, "0")}</span>
         </div>
       </div>
 
