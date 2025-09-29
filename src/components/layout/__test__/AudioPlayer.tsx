@@ -13,6 +13,9 @@ const AudioPlayer = ({ src,vol,onPly,length }: AudioPlayerProps) => {
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
   const [duration, setDuration] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
+  const [volume, setVolume] = useState(0.75);
+  const currentTrack = MusicList[currentTrackIndex];
+  const audioRef = useRef<HTMLAudioElement>(null);
 
   const handleLoadedMetadata = () => {
     if (audioRef.current) {
