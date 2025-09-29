@@ -1,6 +1,6 @@
 import React,{ useState,useEffect, useRef } from 'react';
 import { MusicList } from '../../lib/musicData.ts'
-import { Heart, Play, Mic,Volume2, Captions,Shuffle,Repeat2,StepForward,StepBack, Pause } from 'lucide-react'
+import { Heart, Play, Mic,Volume2,Volume1, Volume,VolumeOff, Captions,Shuffle,Repeat2,StepForward,StepBack, Pause } from 'lucide-react'
 
 const Player = () => {
   const [seconds,setSeconds] = useState(0);
@@ -152,7 +152,7 @@ const Player = () => {
             step="0.01"
             value={volume}
             onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="w-full h-1 bg-neutral-600 rounded-full appearance-none cursor-pointer"
+            className="w-full h-1 bg-neutral-600 relative -top-5 opacity-0 rounded-full appearance-none cursor-pointer"
            />
 
           </div>
