@@ -14,16 +14,19 @@ import cover3 from '/Cover_art/Akon-Lonely.jpg'
 
 export const  MusicList : MusicTrack[] = [
   {
+    id:1,
     artist: 'Jason Derulo',
     song :track1,
     title:'Savage Love',
     png: cover1,
   },{
+    id:2,
     artist: 'Aimee Carty',
     song :track2,
     title:'2 Days Into College',
     png: cover2,
   },{
+    id:3,
     artist: 'Akon',
     song :track3,
     title:'Lonely',

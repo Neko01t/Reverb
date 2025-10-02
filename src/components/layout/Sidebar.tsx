@@ -1,5 +1,6 @@
 import { React } from "react";
 import {House,Search,LibraryBig,Plus} from 'lucide-react'
+import { MusicList  } from '../../lib/musicData.ts'
 
 const Sidebar = () => {
   return (<>
@@ -33,14 +34,21 @@ const Sidebar = () => {
         {/* Scrollable Playlist Area */}
         <div className="overflow-y-auto px-3 pb-4">
           {/* Example Playlist Item */}
-          <div className="flex items-center space-x-4 p-2 rounded-md hover:bg-neutral-800 cursor-pointer">
-            <div className="bg-neutral-800 h-12 w-12 rounded-md"></div>
-            <div>
-              <p className="text-white">My Awesome Playlist</p>
-              <p className="text-sm">Playlist • User</p>
-            </div>
+
+        {MusicList.map((item, index) => (
+        <div
+            key={index}
+            className="flex items-center space-x-4 p-2 rounded-md hover:bg-neutral-800 cursor-pointer"
+          >
+            <div className="bg-neutral-800 h-12 w-12 rounded-md">
+            <img src={item.png} alt={item.title} />
           </div>
-          {/* Add more placeholder playlists here */}
+          <div>
+            <p className="text-white">{item.title}</p>
+            <p className="text-sm">Playlist • User</p>
+          </div>
+        </div>
+        ))}
         </div>
       </div>
     </div>

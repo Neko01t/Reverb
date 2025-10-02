@@ -1,8 +1,10 @@
 import React,{ useState,useEffect, useRef } from 'react';
 import { MusicList } from '../../lib/musicData.ts'
 import { Heart, Play, Mic,Volume2,Volume1, Volume,VolumeOff, Captions,Shuffle,Repeat2,StepForward,StepBack, Pause } from 'lucide-react'
-
-const Player = () => {
+interface playerProps {
+  setSong: (song: number) => void;
+}
+const Player = ( { setSong }: playerProps ) => {
   const [seconds,setSeconds] = useState(0);
   const [isPlaying,setIsPlaying] = useState(false);
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
@@ -91,7 +93,9 @@ const Player = () => {
       clearInterval(intervalId)
     }
   }, [isPlaying])
-
+  useEffect(() => {
+    setSong(currentTrack.id - 1)
+  },[currentTrack])
   const song1 = '/music/Jason_Derulo_SAVAGE_LOVE_Lyrics_Prod_Jawsh_685_fRrkXJu4OeE.m4a'
   return (
     <div className="fixed bottom-0 w-full h-24 bg-black border-t border-neutral-800 px-4 grid grid-cols-3">
