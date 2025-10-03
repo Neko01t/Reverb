@@ -1,30 +1,40 @@
-import React ,{ useState } from 'react';
-import { motion } from 'framer-motion';
-import { MusicList } from '../../lib/musicData.ts'
+import React , {useState} from "react";
+import { motion } from "framer-motion";
+import { useMusic } from "../../context/MusicContext";
 
-interface cardProps {
-  songNum? : number  ;
-}
-
-function Card({songNum}: cardProps) {
-
-  const currentTrack = MusicList[songNum];
+function Card() {
+  const { currentTrack, isPlaying } = useMusic();
+  const { radii, setRadii } = useState()
   return (
-    <>
-      <motion.div
-      initial={{ x:20, opacity: 0, }}
-      animate={{ x:0 , opacity: 1, }}
+    <motion.div
+      initial={{ x: 20, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="absolute top-[20%] left-1/2 -translate-x-1/2 bg-[#121212] text-white p-6 rounded-2xl shadow-lg w-[280px] flex flex-col items-center space-y-4 hover:bg-[#181818]"
+    >
+      <div className="text-center">
+        <p className="text-lg font-bold">{currentTrack.title}</p>
+        <p className="text-sm text-neutral-400">{currentTrack.artist}</p>
+      </div>
 
-      className=" w-auto absolute top-[20%] left-[50%] h-auto bg-[#121212] text-white p-4 rounded-xl hover:bg-[#151515]"
-      >
       <motion.div
-      initial={{x:20}}
-      animate={{x:0}}
-      className='text-center ' > {currentTrack.title} </motion.div>
-      <img src={currentTrack.png} height={200} width={200} />
+        className="w-48 h-48 rounded-full border-4 border-neutral-700 overflow-hidden shadow-md"
+        animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
+        transition={
+          isPlaying
+            ? { repeat: Infinity, ease: "linear", duration: 8 }
+            : { duration: 0.5 }
+        }
+      >
+        <img
+          src={currentTrack.png}
+          alt={currentTrack.title}
+          className="object-cover w-full h-full rounded-full"
+        />
       </motion.div>
-    </>
-  )
+    </motion.div>
+  );
 }
+
 export default Card;
 

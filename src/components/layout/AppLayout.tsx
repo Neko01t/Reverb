@@ -4,15 +4,11 @@ import Player from './Player';
 import { MusicList } from '../../lib/musicData'
 // The layout takes the main page content as a 'children' prop
 interface AppLayoutProps  {
-  setsongNum: (song : number) => void;
   children: React.ReactNode;
 };
 
-const AppLayout = ({setsongNum, children }: AppLayoutProps) => {
+const AppLayout = ({ children }: AppLayoutProps) => {
   const [song , setSong ] = useState(0)
-  useEffect(()=>{
-    setsongNum(song)
-  },[song])
   return (
     <div className="relative h-screen w-screen bg-black">
       <div className="flex flex-wrap h-[calc(100%-6rem)] ">

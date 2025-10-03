@@ -1,22 +1,25 @@
 import React,{ useState,useEffect, useRef } from 'react';
 import { MusicList } from '../../lib/musicData.ts'
-import { Heart, Play, Mic,Volume2,Volume1, Volume,VolumeOff, Captions,Shuffle,Repeat2,StepForward,StepBack, Pause } from 'lucide-react'
+import { useMusic } from '../../context/MusicContext.tsx'
+import { Heart , MicOff, Play, Mic,Volume2,Volume1, Volume,VolumeOff, Captions,Shuffle,Repeat2,StepForward,StepBack, Pause } from 'lucide-react'
 interface playerProps {
   setSong: (song: number) => void;
 }
 const Player = ( { setSong }: playerProps ) => {
-  const [seconds,setSeconds] = useState(0);
-  const [isPlaying,setIsPlaying] = useState(false);
-  const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
 
+  const { currentTrackIndex, currentTrack, isPlaying, setIsPlaying, setCurrentTrackIndex } = useMusic();
+  const [seconds,setSeconds] = useState(0);
   // State for audio progress
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
 
+  const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(0.75); // Volume is 0 to 1
-  const currentTrack = MusicList[currentTrackIndex];
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  const previousVolumeRef = useRef(volume);
+  // temp stotre vol
+  let storeVol ;
   //play or pause
   useEffect(() => {
     if (audioRef.current) {
@@ -76,7 +79,25 @@ const Player = ( { setSong }: playerProps ) => {
     const seconds = Math.floor(timeInSeconds % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   };
+  // Handle mute
+  const handleMuteToggle = () => {
+    // Logic is based on the NEW state we are moving to.
+    if (isMuted) {
+      // Action: UNMUTE
+      setVolume(previousVolumeRef.current); // Restore the old volume
+      setIsMuted(false);
+    } else {
+      // Action: MUTE
+      previousVolumeRef.current = volume; // Save the current volume
+      setVolume(0);
+      setIsMuted(true);
+    }
+  };
 
+  // handle Captions
+  const handleCaption = () =>{
+    alert('Captions not avilable');
+  }
   const progressPercentage = duration > 0 ? (progress / duration) * 100 : 0;
 
   let min = 0;
@@ -88,7 +109,6 @@ const Player = ( { setSong }: playerProps ) => {
         setSeconds(prevSeconds => prevSeconds + 1);
       }, 1000);
     }
-    console.log(MusicList);
     return () => {
       clearInterval(intervalId)
     }
@@ -96,7 +116,28 @@ const Player = ( { setSong }: playerProps ) => {
   useEffect(() => {
     setSong(currentTrack.id - 1)
   },[currentTrack])
-  const song1 = '/music/Jason_Derulo_SAVAGE_LOVE_Lyrics_Prod_Jawsh_685_fRrkXJu4OeE.m4a'
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        handlePlayPause();
+      }else if (event.code === 'KeyM'){
+        event.preventDefault();
+        handleMuteToggle();
+      }
+      else if (event.code === 'KeyC'){
+        event.preventDefault();
+        handleCaption();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handlePlayPause, handleMuteToggle,handleCaption]); // Re-run effect if togglePlayPause changes
+
   return (
     <div className="fixed bottom-0 w-full h-24 bg-black border-t border-neutral-800 px-4 grid grid-cols-3">
         <audio
@@ -143,12 +184,13 @@ const Player = ( { setSong }: playerProps ) => {
 
       {/* 3. Volume & Other Controls (Right) */}
       <div className="flex items-center justify-end space-x-4">
-        <button className="text-neutral-400 hover:text-white"><Mic/></button>
+        <button onClick={handleMuteToggle} className="text-neutral-400 hover:text-white">{ volume <= 0 ?  <MicOff/> : <Mic/>}</button>
         <button className="text-neutral-400 hover:text-white"><Captions/></button>
         <div className="flex items-center space-x-2 w-32">
           <button className="text-neutral-400 hover:text-white"><Volume2/></button>
           <div className="w-full h-1 bg-neutral-600 rounded-full">
           <div className="h-1 bg-white rounded-full" style={{ width: `${volume*100}%` }}></div>
+          <div className="rounded-full" >  </div>
           <input
             type="range"
             min="0"
@@ -156,7 +198,7 @@ const Player = ( { setSong }: playerProps ) => {
             step="0.01"
             value={volume}
             onChange={(e) => setVolume(parseFloat(e.target.value))}
-            className="w-full h-1 bg-neutral-600 relative -top-5 opacity-0 rounded-full appearance-none cursor-pointer"
+            className="w-full h-1 bg-neutral-600 relative -top-5 opacity-0 rounded-full cursor-pointer"
            />
 
           </div>
