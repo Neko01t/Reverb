@@ -2,6 +2,7 @@ import React,{ useState,useEffect, useRef } from 'react';
 import { MusicList } from '../../lib/musicData.ts'
 import { useMusic } from '../../context/MusicContext.tsx'
 import { Heart , MicOff, Play, Mic,Volume2,Volume1, Volume,VolumeOff, Captions,Shuffle,Repeat2,StepForward,StepBack, Pause } from 'lucide-react'
+
 interface playerProps {
   setSong: (song: number) => void;
 }
@@ -18,9 +19,7 @@ const Player = ( { setSong }: playerProps ) => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const previousVolumeRef = useRef(volume);
-  // temp stotre vol
   let storeVol ;
-  //play or pause
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -69,7 +68,7 @@ const Player = ( { setSong }: playerProps ) => {
   const handlePrev = () => {
     const prevIndex = (currentTrackIndex - 1 + MusicList.length) % MusicList.length;
     setCurrentTrackIndex(prevIndex);
-    setProgress(0); // Reset progress for the new song
+    setProgress(0);
   };
 
   // time format

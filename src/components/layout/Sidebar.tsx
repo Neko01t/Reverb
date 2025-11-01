@@ -1,8 +1,11 @@
-import { React } from "react";
+import { React,useState,useEffect } from "react";
 import {House,Search,LibraryBig,Plus} from 'lucide-react'
 import { MusicList  } from '../../lib/musicData.ts'
+import { useMusic } from '../../context/MusicContext.tsx'
 
 const Sidebar = () => {
+
+  const { currentTrackIndex, currentTrack, isPlaying, setIsPlaying, setCurrentTrackIndex } = useMusic();
   return (<>
     <div className="bg-black text-neutral-400 h-full w-64 p-2 flex flex-col">
       {/* Main Navigation */}
@@ -18,7 +21,6 @@ const Sidebar = () => {
           </a>
         </nav>
       </div>
-
       {/* Library & Playlists */}
       <div className="bg-[#121212] rounded-lg flex-1 flex flex-col">
         <div className="px-5 py-4">
@@ -34,12 +36,13 @@ const Sidebar = () => {
         {/* Scrollable Playlist Area */}
         <div className="overflow-y-auto px-3 pb-4">
           {/* Example Playlist Item */}
-
         {MusicList.map((item, index) => (
         <div
+            onClick={()=>{setCurrentTrackIndex(index)}}
             key={index}
             className="flex items-center space-x-4 p-2 rounded-md hover:bg-neutral-800 cursor-pointer"
           >
+            <div>{index+1}</div>
             <div className="bg-neutral-800 h-12 w-12 rounded-md">
             <img src={item.png} alt={item.title} />
           </div>
