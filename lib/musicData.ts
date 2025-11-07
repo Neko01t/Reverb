@@ -11,6 +11,8 @@ import track2 from '/music/2_days_into_college- Aimee_Carty.m4a'
 import cover2 from '/Cover_art/2days_into_college.jpg'
 import track3 from '/music/Akon_Lonely.m4a'
 import cover3 from '/Cover_art/Akon-Lonely.jpg'
+import track4 from '/music/Zach_Seabaugh Christmas_Lights.m4a'
+import cover4 from '/Cover_art/Christmas_Lights.jpeg'
 
 export const  MusicList : MusicTrack[] = [
   {
@@ -31,5 +33,11 @@ export const  MusicList : MusicTrack[] = [
     song :track3,
     title:'Lonely',
     png: cover3,
+  },{
+    id:4,
+    artist: 'Zach Seabaugh',
+    song: track4,
+    title: 'Christmas Lights',
+    png: cover4,
   },
 ]
